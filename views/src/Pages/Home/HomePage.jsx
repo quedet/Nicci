@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import ContentHeader from "../../Components/ContentHeader"
 import PostItem from "../../Components/PostItem"
 
 const HomePage = () => {
@@ -13,18 +14,24 @@ const HomePage = () => {
         }
 
         fetchPostData()
+
+        return () => {
+            setPosts([])
+        }
     }, [])
 
     return (
         <div className="home">
             <div className="home--wrapper">
-                <header className="home--header">
-                    <h1 className="home--header--title dot-path"><span>Pictures</span><span className="dot dot-large"></span><span>Home</span></h1>
-                </header>
+                <ContentHeader label={"Home"} />
                 <section>
                     { posts && posts.map(post => (
-                        <PostItem key={post.id} image={post.image} description={post.description} author={post.author} likes={post.likes} />
+                        <PostItem key={post.id} id={post.id} image={post.image} description={post.description} author={post.author} likes={post.likes} />
                     ))}
+                    { posts.length === 0 && (<div style={{ textAlign: "center" }}>
+                        <br />
+                        <h1>No Such Post</h1>
+                    </div>)}
                 </section>
             </div>
         </div>

@@ -37,6 +37,7 @@
     ]
   },
   "devDependencies": {
+    "@tinymce/tinymce-react": "^3.13.0",
     "node-sass": "^7.0.1"
   }
 }

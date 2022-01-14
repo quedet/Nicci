@@ -2,6 +2,7 @@
     border: 1px solid rgb(165, 165, 165);
     margin: 1rem 0;
     border-radius: 10px;
+    position: relative;
 }
 
 // .post-item--header {
@@ -44,4 +45,13 @@
 
 .post-item--header--title--icon {
     margin-right: 0.4rem;
+}
+
+.post-item--header--extra {
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover {
+        color: gray;
+    }
 }

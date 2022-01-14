@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import ContentHeader from '../../Components/ContentHeader'
+import {useNavigate, useParams} from 'react-router-dom'
+import "./UpdatePage.scss"
 import Spinner from '../../Components/Spinner'
 
-function CreatePage() {
+function UpdatePage() {
     const [image, setImage] = useState(null)
     const [imageBlob, setImageBlob] = useState("")
     const [description, setDescription] = useState("")
     const [sendLoading, setSendLoading] = useState(false)
+    const [currentPost, setCurrentPost] = useState({})
 
+    const {id} = useParams()
     const navigate = useNavigate()
 
     const handleSubmit = async (evt) => {
@@ -17,12 +20,14 @@ function CreatePage() {
         setSendLoading(true)
 
         const formData = new FormData()
-        formData.append('data', JSON.stringify({ description, likes: 0 }))
+        formData.append('data', JSON.stringify({ description , likes: 0 }))
         formData.append('files.image', image)
 
-        const response = await fetch("http://localhost:1337/posts", {
-            method: 'POST',
+        const response = await fetch(`http://localhost:1337/posts/${id}`, {
+            method: 'PUT',
             body: formData
+        }).catch(err => {
+            setSendLoading(false)
         })
 
         const data = await response.json()
@@ -37,12 +42,22 @@ function CreatePage() {
         if (image && image.name) {
             setImageBlob(URL.createObjectURL(image))
         }
-    }, [image])
+
+        const fetchData = async () => {
+            const response = await fetch(`http://localhost:1337/posts/${id}`)
+            const data = await response.json()
+
+            setCurrentPost({...data})
+            setDescription(data.description)
+        }
+
+        fetchData()
+    }, [image, id])
 
     return (
-        <div className='create'>
-            <div className="create--wrapper">
-                <ContentHeader label={"Create"} />
+        <div className='update'>
+            <div className="update--wrapper">
+                <ContentHeader label={"Update"} />
                 {sendLoading && (
                     <section className='overlay'>
                         <Spinner />
@@ -52,18 +67,17 @@ function CreatePage() {
                     <div className="create-form--wrapper">
                         <div className="file">
                             <div className="form-item form-item-file">
-                                <label htmlFor="image" className='form-item-file-label'><span className="form-item-file-label-icon"><i className='bi bi-upload'></i></span></label>
-                                <input type="file" name='image' id="image" onChange={(evt) => { setImage(evt.target.files[0])}} className='form-item-file-input'/>
-                                <span>Upload</span>
-                            </div>
-                            { image && (
-                                <div className='form-item form-item-file-overview'>
-                                    <figure>
-                                        <img src={imageBlob} alt={imageBlob} />
-                                    </figure>
+                                <div className="__inner">
+                                    <label htmlFor="image" className='form-item-file-label'><span className="form-item-file-label-icon"><i className='bi bi-upload'></i></span></label>
+                                    <input type="file" name='image' id="image" onChange={(evt) => { setImage(evt.target.files[0])}} className='form-item-file-input'/>
+                                    <span>Update</span>
                                 </div>
-                            )}
-
+                            </div>
+                            <div className='form-item form-item-file-overview'>
+                                <figure>
+                                    <img src={image ? imageBlob : `http://localhost:1337${currentPost.image?.url}`} alt={image ? imageBlob: ""} />
+                                </figure>
+                            </div>
                         </div>
                         <div className="form-item form-item-description">
                             <label htmlFor="description">Description</label>
@@ -79,4 +93,4 @@ function CreatePage() {
     )
 }
 
-export default CreatePage
+export default UpdatePage
