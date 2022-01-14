@@ -1,0 +1,26 @@
+.app--content--wrapper {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    padding: 0.85rem 0;
+}
+
+.dot-path {
+    display: flex;
+    align-items: center;
+}
+
+.dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background-color: grey;
+    border-radius: 100px;
+    margin: 0 0.25rem;
+}
+
+.dot-large {
+    width: 10px;
+    height: 10px;
+    margin: 0 0.70rem;
+}
