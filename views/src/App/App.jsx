@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from '../Components/Navbar'
 import { AuthContextProvider } from '../Context/AuthProvider'
 import { CreatePage, HomePage, InfoPage, UpdatePage } from '../Pages'
+import Login from '../Pages/Login/Login'
+import Signup from '../Pages/Signup/SignUp'
 
 const App = () => {
     return (
@@ -18,6 +20,8 @@ const App = () => {
                             <div className="app--content--wrapper">
                                 <Routes>
                                     <Route path="/" element={<HomePage />} />
+                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/signup" element={<Signup />} />
                                     <Route path="/create" element={<CreatePage />} />
                                     <Route path="/details/:id" element={<InfoPage />} />
                                     <Route path="/details/:id/update" element={<UpdatePage />} />

@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import "./PostItem.scss"
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import Action from './Action'
+import { UserContext } from '../Context/UserContext'
 
 function PostItem (props) {
     const [isActivate, setActivation] = useState(false)
+    const [owner, setOwner] = useState(false)
     const navigate = useNavigate()
+    const location = useLocation()
+    const { user } = useContext(UserContext)
 
     const OpenOverlay = () => {
         setActivation(true)
@@ -17,21 +21,38 @@ function PostItem (props) {
 
     const DeletePost = async () => {
         const response = await fetch(`http://localhost:1337/posts/${props.id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${user.jwt}`
+            }
         })
 
         const data = await response.json()
 
         if (data) {
-            navigate('/')
+            if (location.pathname === "/") {
+                window.location.reload()
+            } else {
+                navigate('/')
+            }
         } else {
-            window.alert("Cant delete thsi post")
+            window.alert("Cant delete this post")
         }
     }
 
     const UpdateLink = () => {
         navigate(`/details/${props.id}/update`)
     }
+
+    useEffect(() => {
+        if (user && props.author) {
+            if (props.author.email === user.user.email) {
+                setOwner(true)
+            } else {
+                setOwner(false)
+            }
+        }
+    }, [props.author, user])
 
     return (
         <article className='post-item'>
@@ -62,7 +83,7 @@ function PostItem (props) {
                     </p>
                 </div>
             </footer>
-            {isActivate && (<Action close={CloseOverlay} delete={DeletePost} update={UpdateLink} />)}
+            {isActivate && (<Action close={CloseOverlay} delete={DeletePost} update={UpdateLink} user={user} owner={owner} />)}
         </article>
     )
 }

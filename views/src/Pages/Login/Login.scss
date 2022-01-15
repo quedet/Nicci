@@ -1,0 +1,36 @@
+.login--form-item {
+    display: flex;
+    flex-direction: column;
+    margin: 0.75rem 0;
+
+    label {
+        margin: 0.5rem 0;
+    }
+}
+
+.login--form--item--control {
+    padding: 0.75rem;
+    border: 1px solid rgb(185, 185, 185);
+}
+
+.login--form--item--submit {
+    background-color: #005a9e;
+    color: #FFF;
+}
+
+.login--form--item--link {
+    color: #005a9e;
+    text-decoration: none;
+}
+
+.login--form-item--error {
+    background-color: #a80000;
+    padding: 0.75rem;
+    color: #FFF;
+
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

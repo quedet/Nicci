@@ -1,70 +1,10 @@
 .create-form {
     margin: 0.75rem 0;
 }
-.form-item-file-input {
-    display: none;
-}
-
-.form-item-file {
-    align-items: center;
-}
-
-.form-item-description {
-
-    label {
-        margin: 0.5rem 0;
-    }
-}
-
-.form-item-file-label {
-    margin: 0.75rem 0;
-
-    .form-item-file-label-icon {
-        padding: 0.5rem 0.7rem;
-        display: inline-block;
-        border: 1px solid grey;
-        border-radius: 100%;
-    }
-} 
-
-.form-item {
-    display: flex;
-    flex-direction: column;
-    margin: 0.75rem 0;
-}
-
-.create-form--wrapper {
-    display: flex;
-    flex-direction: column;
-
-    figure {
-        width: 100%;
-
-        img {
-            width: 100%;
-            object-fit: cover;
-        }
-    }
-}
-
-.form-item-submit {
-    border: none;
-    padding: 0.75rem;
-    font-size: 1rem;
-    background-color: #005a9e;
-    color: #fff;
-    cursor: pointer;
-
-}
 
 .lds-roller {
     width: 10px;
     height: 10px;
-}
-.file {
-    background-color: #edebe9;
-    border-radius: 10px;
-    padding: 0 0.75rem;
 }
 
 .overlay {

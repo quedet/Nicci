@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import ContentHeader from '../../Components/ContentHeader'
 import {useNavigate, useParams} from 'react-router-dom'
-import "./UpdatePage.scss"
 import Spinner from '../../Components/Spinner'
+import Form from '../../Components/Form'
+import { UserContext } from '../../Context/UserContext'
 
 function UpdatePage() {
     const [image, setImage] = useState(null)
@@ -14,17 +15,22 @@ function UpdatePage() {
     const {id} = useParams()
     const navigate = useNavigate()
 
+    const { user } = useContext(UserContext)
+
     const handleSubmit = async (evt) => {
         evt.preventDefault()
 
         setSendLoading(true)
 
         const formData = new FormData()
-        formData.append('data', JSON.stringify({ description , likes: 0 }))
+        formData.append('data', JSON.stringify({ description , likes: 0, author: user.user }))
         formData.append('files.image', image)
 
         const response = await fetch(`http://localhost:1337/posts/${id}`, {
             method: 'PUT',
+            headers: {
+                "Authorization": `Bearer ${user.jwt}`
+            },
             body: formData
         }).catch(err => {
             setSendLoading(false)
@@ -52,7 +58,15 @@ function UpdatePage() {
         }
 
         fetchData()
-    }, [image, id])
+
+        if (user && currentPost.author) {
+            if (currentPost.author.email !== user.user.email) {
+                navigate("/")
+            }
+        } else {
+            navigate("/login")
+        }
+    }, [image, id, navigate, user, currentPost])
 
     return (
         <div className='update'>
@@ -63,31 +77,7 @@ function UpdatePage() {
                         <Spinner />
                     </section>
                 )}
-                <form action="" method="post" className='create-form' onSubmit={handleSubmit}>
-                    <div className="create-form--wrapper">
-                        <div className="file">
-                            <div className="form-item form-item-file">
-                                <div className="__inner">
-                                    <label htmlFor="image" className='form-item-file-label'><span className="form-item-file-label-icon"><i className='bi bi-upload'></i></span></label>
-                                    <input type="file" name='image' id="image" onChange={(evt) => { setImage(evt.target.files[0])}} className='form-item-file-input'/>
-                                    <span>Update</span>
-                                </div>
-                            </div>
-                            <div className='form-item form-item-file-overview'>
-                                <figure>
-                                    <img src={image ? imageBlob : `http://localhost:1337${currentPost.image?.url}`} alt={image ? imageBlob: ""} />
-                                </figure>
-                            </div>
-                        </div>
-                        <div className="form-item form-item-description">
-                            <label htmlFor="description">Description</label>
-                            <textarea type="text" name='description' id="description" onChange={(evt) => { setDescription(evt.target.value)}} value={description} rows="10"  placeholder="" />
-                        </div>
-                        <div className="form-item">
-                            <button type="submit" className='form-item-submit'><span><i className="bi bi-box-arrow-down"></i></span>  <span>Save</span></button>
-                        </div>
-                    </div>
-                </form>
+                <Form image={image} imageBlob={imageBlob} description={description} setDescription={setDescription} currentPost={currentPost} handleSubmit={handleSubmit} setImage={setImage} />
             </div>
         </div>
     )

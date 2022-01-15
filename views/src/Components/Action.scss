@@ -32,3 +32,15 @@
         }
     }
 }
+
+.action--overlay--warning {
+    .action--overlay--warning--icon {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .action--overlay--warning--link {
+        color: #005a9e;
+        text-decoration: none;
+    }
+}
