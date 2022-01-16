@@ -10,9 +10,14 @@ function CreatePage() {
     const [imageBlob, setImageBlob] = useState("")
     const [description, setDescription] = useState("")
     const [sendLoading, setSendLoading] = useState(false)
-
+    const [error, setError] = useState('')
     const { user } = useContext(UserContext)
+
     const navigate = useNavigate()
+
+    const closeErrorPanel = () => {
+        setError("")
+    }
 
     const handleSubmit = async (evt) => {
         evt.preventDefault()
@@ -20,22 +25,31 @@ function CreatePage() {
         setSendLoading(true)
 
         const formData = new FormData()
-        formData.append('data', JSON.stringify({ description, likes: 0, author: user.user }))
+        formData.append('data', JSON.stringify({ description, author: user.user }))
         formData.append('files.image', image)
 
-        const response = await fetch("http://localhost:1337/posts", {
-            method: 'POST',
-            headers: {
-                "Authorization": `Bearer ${user.jwt}`
-            },
-            body: formData
-        })
+        try {
+            const response = await fetch("http://localhost:1337/posts", {
+                method: 'POST',
+                headers: {
+                    "Authorization": `Bearer ${user.jwt}`
+                },
+                body: formData
+            })
 
-        const data = await response.json()
-        
-        if (data) {
+            const data = await response.json()
+
+            if (data.id) {
+                navigate("/")
+            }
+
+            if (data.error) {
+                setError(data.message)
+            }
+
             setSendLoading(false)
-            navigate("/")
+        } catch (err) {
+            setError(err.message)
         }
     }
 
@@ -58,7 +72,17 @@ function CreatePage() {
                         <Spinner />
                     </section>
                 )}
-                <Form image={image} imageBlob={imageBlob} description={description} setDescription={setDescription} handleSubmit={handleSubmit} setImage={setImage} />
+                <Form 
+                    image={image} 
+                    imageBlob={imageBlob} 
+                    description={description} 
+                    setDescription={setDescription} 
+                    handleSubmit={handleSubmit} 
+                    setImage={setImage} 
+                    error={error} 
+                    closeErrorPanel={closeErrorPanel} 
+                    setError={setError} 
+                />
             </div>
         </div>
     )

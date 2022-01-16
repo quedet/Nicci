@@ -66,6 +66,8 @@ function Login() {
         if (user) {
             navigate("/")
         }
+
+        console.log(user);
     }, [navigate, user])
 
     return (

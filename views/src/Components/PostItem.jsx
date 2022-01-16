@@ -7,9 +7,10 @@ import { UserContext } from '../Context/UserContext'
 function PostItem (props) {
     const [isActivate, setActivation] = useState(false)
     const [owner, setOwner] = useState(false)
-    const navigate = useNavigate()
     const location = useLocation()
     const { user } = useContext(UserContext)
+
+    const navigate = useNavigate()
 
     const OpenOverlay = () => {
         setActivation(true)
@@ -29,7 +30,7 @@ function PostItem (props) {
 
         const data = await response.json()
 
-        if (data) {
+        if (data.id) {
             if (location.pathname === "/") {
                 window.location.reload()
             } else {

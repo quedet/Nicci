@@ -34,6 +34,10 @@
     },
     "likes": {
       "type": "integer"
+    },
+    "like_events": {
+      "via": "post",
+      "collection": "like"
     }
   }
 }
